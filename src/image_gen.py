@@ -1,0 +1,1 @@
+# Binary → grayscale image converter
