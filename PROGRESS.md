@@ -53,12 +53,17 @@ Steps:
 
 1. Download the Fusion dataset:
    `kaggle datasets download -d marcesalas/fusion-dataset-59-malware-families-in-png-format`
-2. Keep only the 8 BIG 2015 family folders, drop the other 51. Merge `Kelihos_ver1` +
-   `Kelihos_ver3` → `Kelihos`. Place under `data/processed/<family>/`.
+2. Run `python src/prepare_big2015_fusion.py <extracted_fusion_dir>` — it keeps only the 8
+   BIG 2015 family folders, merges `Kelihos_ver1` + `Kelihos_ver3` → `Kelihos`, and writes
+   `data/processed/<family>/`. (Tested against a synthetic fixture; selects the 7 classes and
+   drops decoys correctly.)
 3. **`src/image_gen.py` is not needed for Stage B** — the images are already 224×224 PNG.
    (`dataset.py` already does `.convert('L')`, so RGB-vs-grayscale doesn't matter.)
-4. Retrain on the 7 families, then Y does: confusion-matrix interpretation
-   ("Security Analysis of Model Errors"), Grad-CAM vs PE sections (`report/gradcam_analysis.md`).
+4. Retrain on the 7 families (`python src/train.py`), then Y fills in the two analysis
+   templates already scaffolded: `report/model_errors_analysis.md` (confusion-matrix
+   interpretation) and `report/gradcam_analysis.md` (Grad-CAM security reading). Note the
+   PE-header caveat documented there: BIG 2015 `.bytes` ship with the PE header stripped, so
+   Grad-CAM cannot be attributed to the header.
 5. From issue #1, still relevant: persist metrics to `outputs/metrics.json`; track global-best
    checkpoint across stages. The `.bytes` hex-parsing fix (issue #1 item 1) is **no longer a
    Stage B blocker** since we skip raw binaries — keep it only if we ever want to reproduce the
