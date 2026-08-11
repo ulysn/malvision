@@ -35,23 +35,43 @@ and running them through a fine-tuned ResNet18 (transfer learning). No malware i
 ## What's next — Stage B (the real target)
 
 Move to **BIG 2015**, restricted to our 7 documented families, so Y's analysis becomes
-meaningful. Blockers/steps:
+meaningful.
 
-1. **Fix `.bytes` parsing (issue #1, item 1).** BIG 2015 `.bytes` files are hex-ASCII text,
-   not raw binary. `src/image_gen.py` currently reads raw `uint8` → garbage on BIG 2015.
-   Must parse hex before Stage B.
-2. **Download BIG 2015** from Kaggle (`kaggle competitions download -c malware-classification`),
-   extract only `.bytes`, organize into `data/raw/<family>/` using `trainLabels.csv`.
-   Class map: 1 Ramnit, 2 Lollipop, 3 Kelihos_ver3, 4 Vundo, 5 Simda (**skip**), 6 Tracur,
-   7 Kelihos_ver1, 8 Obfuscator.ACY, 9 Gatak. Merge classes 3+7 into one "Kelihos".
-3. **Retrain** on the 7 families, then Y does: confusion-matrix interpretation
+**Data source decided: the pre-converted Fusion dataset (no 200GB download).**
+The raw BIG 2015 competition data is ~200GB after extraction (50GB `.bytes` + 150GB `.asm`),
+which does not fit on the available machines. Instead we use a Kaggle dataset that already
+has BIG 2015 converted to 224×224 PNGs:
+
+- **`marcesalas/fusion-dataset-59-malware-families-in-png-format`** — 2.24 GB total, 32,601
+  PNGs (224×224), 59 families, already split into train/valid/test. Combines BIG 2015 +
+  Malimg + MaleVis. MIT license.
+- It contains all 7 of our families as pure BIG 2015 folders: `Ramnit`, `Lollipop`, `Vundo`,
+  `Tracur`, `Gatak`, `Obfuscator.ACY`, plus `Kelihos_ver1` and `Kelihos_ver3` (merge these
+  two into one "Kelihos"). Simda is not needed and is skipped.
+
+Steps:
+
+1. Download the Fusion dataset:
+   `kaggle datasets download -d marcesalas/fusion-dataset-59-malware-families-in-png-format`
+2. Keep only the 8 BIG 2015 family folders, drop the other 51. Merge `Kelihos_ver1` +
+   `Kelihos_ver3` → `Kelihos`. Place under `data/processed/<family>/`.
+3. **`src/image_gen.py` is not needed for Stage B** — the images are already 224×224 PNG.
+   (`dataset.py` already does `.convert('L')`, so RGB-vs-grayscale doesn't matter.)
+4. Retrain on the 7 families, then Y does: confusion-matrix interpretation
    ("Security Analysis of Model Errors"), Grad-CAM vs PE sections (`report/gradcam_analysis.md`).
-4. Also from issue #1: persist metrics to `outputs/metrics.json`; track global-best checkpoint
-   across stages.
+5. From issue #1, still relevant: persist metrics to `outputs/metrics.json`; track global-best
+   checkpoint across stages. The `.bytes` hex-parsing fix (issue #1 item 1) is **no longer a
+   Stage B blocker** since we skip raw binaries — keep it only if we ever want to reproduce the
+   conversion from raw BIG 2015.
+
+Reference: the Fusion dataset comes from the paper "Deep Learning Applied to Imbalanced Malware
+Datasets Classification" (MobileNet fine-tuning; BIG 2015 98.71%). Useful as a comparison
+baseline in the report.
 
 ## Open items
 
-- **GitHub issue #1** — Stage A review follow-ups (assigned to E's work).
+- **GitHub issue #1** — Stage A review follow-ups. Item 1 (`.bytes` parsing) deprioritized;
+  items 2–3 (persist metrics, global-best checkpoint) still apply.
 - Y's Phase 2/4/5 analysis tasks are blocked until Stage B results exist.
 
 ## How to resume in a new session
