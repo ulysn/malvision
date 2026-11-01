@@ -6,9 +6,24 @@ import numpy as np
 from tqdm import tqdm
 
 
+def bytes_file_to_array(filepath):
+    """BIG 2015 `.bytes` files are hex-ASCII dumps, one line per 16 bytes:
+    `00401000 4D 5A 90 00 ...`. Drop the address column and map `??`
+    (unreadable bytes) to 0."""
+    vals = []
+    with open(filepath, 'r') as f:
+        for line in f:
+            for tok in line.split()[1:]:
+                vals.append(0 if tok == '??' else int(tok, 16))
+    return np.array(vals, dtype=np.uint8)
+
+
 def binary_to_image(filepath, size=224):
-    with open(filepath, 'rb') as f:
-        bytes_data = np.frombuffer(f.read(), dtype=np.uint8)
+    if str(filepath).lower().endswith('.bytes'):
+        bytes_data = bytes_file_to_array(filepath)
+    else:
+        with open(filepath, 'rb') as f:
+            bytes_data = np.frombuffer(f.read(), dtype=np.uint8)
 
     if len(bytes_data) == 0:
         return np.zeros((size, size), dtype=np.uint8)

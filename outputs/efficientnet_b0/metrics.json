@@ -1,0 +1,132 @@
+{
+  "arch": "efficientnet_b0",
+  "checkpoint": "outputs/efficientnet_b0/best_model.pth",
+  "checkpoint_stage": "Stage3",
+  "checkpoint_epoch": 5,
+  "num_test_samples": 1624,
+  "accuracy": 0.9895320197044335,
+  "precision_macro": 0.9829049595386632,
+  "recall_macro": 0.9873209728449159,
+  "f1_macro": 0.9849184606500775,
+  "roc_auc_ovr_macro": 0.9997881483505425,
+  "total_params": 4016515,
+  "model_size_mb": 15.61,
+  "class_names": [
+    "Gatak",
+    "Kelihos",
+    "Lollipop",
+    "Obfuscator.ACY",
+    "Ramnit",
+    "Tracur",
+    "Vundo"
+  ],
+  "per_class": {
+    "Gatak": {
+      "precision": 0.9681528662420382,
+      "recall": 1.0,
+      "f1-score": 0.9838187702265372,
+      "support": 152.0
+    },
+    "Kelihos": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 501.0
+    },
+    "Lollipop": {
+      "precision": 0.997289972899729,
+      "recall": 0.989247311827957,
+      "f1-score": 0.9932523616734144,
+      "support": 372.0
+    },
+    "Obfuscator.ACY": {
+      "precision": 0.9942528735632183,
+      "recall": 0.9402173913043478,
+      "f1-score": 0.9664804469273743,
+      "support": 184.0
+    },
+    "Ramnit": {
+      "precision": 0.9787234042553191,
+      "recall": 0.9956709956709957,
+      "f1-score": 0.9871244635193133,
+      "support": 231.0
+    },
+    "Tracur": {
+      "precision": 0.9824561403508771,
+      "recall": 1.0,
+      "f1-score": 0.9911504424778761,
+      "support": 112.0
+    },
+    "Vundo": {
+      "precision": 0.9594594594594594,
+      "recall": 0.9861111111111112,
+      "f1-score": 0.9726027397260274,
+      "support": 72.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      152,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      501,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      0,
+      368,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      2,
+      0,
+      0,
+      173,
+      4,
+      2,
+      3
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      230,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      112,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      71
+    ]
+  ]
+}

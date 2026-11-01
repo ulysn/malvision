@@ -21,10 +21,12 @@ env/
 # Data — raw malware binaries and processed images are large; track only manifests
 data/raw/
 data/processed/
+data/processed_big2015/
 
-# Model checkpoints and outputs
-outputs/best_model.pth
-outputs/*.pth
+# Model checkpoints (any folder depth)
+*.pth
+*.pt
+*.ckpt
 
 # OS
 .DS_Store
@@ -39,3 +41,20 @@ Thumbs.db
 # Logs
 *.log
 .vs/
+# Credentials and secrets — never commit
+kaggle.json
+.kaggle/
+*.pem
+*.key
+.env.*
+*credentials*.json
+*token*
+
+# Raw malware samples and downloaded archives
+*.bytes
+*.asm
+*.exe
+*.dll
+*.zip
+*.7z
+*.rar

@@ -1,0 +1,25 @@
+
+=== Test Set Results ===
+  Accuracy   : 0.9945
+  Precision  : 0.9937  (macro)
+  Recall     : 0.9932  (macro)
+  F1-score   : 0.9935  (macro)
+  ROC-AUC    : 1.0000  (one-vs-rest macro)
+
+Per-class breakdown:
+                precision    recall  f1-score   support
+
+         Gatak     0.9935    1.0000    0.9967       152
+       Kelihos     0.9960    1.0000    0.9980       501
+      Lollipop     0.9946    0.9973    0.9960       372
+Obfuscator.ACY     0.9944    0.9728    0.9835       184
+        Ramnit     0.9913    0.9913    0.9913       231
+        Tracur     1.0000    0.9911    0.9955       112
+         Vundo     0.9863    1.0000    0.9931        72
+
+      accuracy                         0.9945      1624
+     macro avg     0.9937    0.9932    0.9935      1624
+  weighted avg     0.9945    0.9945    0.9944      1624
+
+Confusion matrix saved to outputs\resnet18\confusion_matrix.png
+Metrics saved to outputs\resnet18\metrics.json

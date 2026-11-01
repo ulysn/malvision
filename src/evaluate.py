@@ -1,4 +1,5 @@
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -12,7 +13,7 @@ from sklearn.metrics import (accuracy_score, classification_report,
 
 sys.path.insert(0, str(Path(__file__).parent))
 from dataset import get_dataloaders, load_splits_from_csv
-from model import build_model
+from model import build_model, count_params
 
 
 @torch.no_grad()
@@ -59,8 +60,9 @@ def evaluate(data_dir='data', outputs_dir='outputs',
         batch_size=batch_size, num_workers=num_workers,
     )
 
-    model = build_model(num_classes, freeze_backbone=False).to(device)
     ckpt = torch.load(checkpoint, map_location=device, weights_only=True)
+    arch = ckpt.get('arch', 'resnet18')  # Stage A checkpoints predate the arch field
+    model = build_model(num_classes, freeze_backbone=False, arch=arch).to(device)
     model.load_state_dict(ckpt['model_state'])
 
     preds, labels, probs = get_predictions(model, test_loader, device)
@@ -81,13 +83,40 @@ def evaluate(data_dir='data', outputs_dir='outputs',
     print(f'  Recall     : {rec:.4f}  (macro)')
     print(f'  F1-score   : {f1:.4f}  (macro)')
     print(f'  ROC-AUC    : {roc:.4f}  (one-vs-rest macro)')
+    report = classification_report(labels, preds, target_names=class_names,
+                                   digits=4, zero_division=0)
     print('\nPer-class breakdown:')
-    print(classification_report(labels, preds, target_names=class_names, zero_division=0))
+    print(report)
 
     cm = confusion_matrix(labels, preds)
     plot_confusion_matrix(cm, class_names, outputs_dir)
 
-    return {'accuracy': acc, 'precision': prec, 'recall': rec, 'f1': f1, 'roc_auc': roc}
+    outputs_dir = Path(outputs_dir)
+    per_class = classification_report(labels, preds, target_names=class_names,
+                                      output_dict=True, zero_division=0)
+    metrics = {
+        'arch': arch,
+        'checkpoint': str(checkpoint),
+        'checkpoint_stage': ckpt.get('stage'),
+        'checkpoint_epoch': ckpt.get('epoch'),
+        'num_test_samples': int(len(labels)),
+        'accuracy': acc,
+        'precision_macro': prec,
+        'recall_macro': rec,
+        'f1_macro': f1,
+        'roc_auc_ovr_macro': None if np.isnan(roc) else roc,
+        'total_params': count_params(model),
+        'model_size_mb': round(Path(checkpoint).stat().st_size / 2**20, 2),
+        'class_names': class_names,
+        'per_class': {name: per_class[name] for name in class_names},
+        'confusion_matrix': cm.tolist(),
+    }
+    with open(outputs_dir / 'metrics.json', 'w') as f:
+        json.dump(metrics, f, indent=2)
+    (outputs_dir / 'classification_report.txt').write_text(report)
+    print(f"Metrics saved to {outputs_dir / 'metrics.json'}")
+
+    return metrics
 
 
 if __name__ == '__main__':
