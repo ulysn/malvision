@@ -45,10 +45,14 @@ class MalwareDataset(Dataset):
         return img, self.labels[idx]
 
 
+def list_families(processed_dir):
+    return sorted(d.name for d in Path(processed_dir).iterdir() if d.is_dir())
+
+
 def build_manifest(processed_dir):
     processed_dir = Path(processed_dir)
-    family_dirs = sorted(d for d in processed_dir.iterdir() if d.is_dir())
-    class_names = [d.name for d in family_dirs]
+    class_names = list_families(processed_dir)
+    family_dirs = [processed_dir / name for name in class_names]
     class_to_idx = {name: i for i, name in enumerate(class_names)}
 
     records = []

@@ -12,7 +12,7 @@ from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 
 sys.path.insert(0, str(Path(__file__).parent))
 from dataset import get_transforms, load_splits_from_csv
-from model import build_model
+from model import build_model, gradcam_target_layer
 
 IMAGENET_MEAN = np.array([0.485, 0.456, 0.406])
 IMAGENET_STD  = np.array([0.229, 0.224, 0.225])
@@ -24,8 +24,8 @@ def tensor_to_rgb(tensor):
     return np.clip(img, 0, 1).astype(np.float32)
 
 
-def gradcam_for_sample(model, tensor, class_idx, device):
-    target_layer = [model.layer4[-1]]
+def gradcam_for_sample(model, tensor, class_idx, device, arch='resnet18'):
+    target_layer = [gradcam_target_layer(model, arch)]
     with GradCAM(model=model, target_layers=target_layer) as cam:
         grayscale = cam(
             input_tensor=tensor.unsqueeze(0).to(device),
@@ -41,8 +41,9 @@ def generate_all(data_dir='data', outputs_dir='outputs',
     _, _, _, _, test_paths, test_labels, class_names = load_splits_from_csv(data_dir)
     num_classes = len(class_names)
 
-    model = build_model(num_classes, freeze_backbone=False).to(device)
     ckpt = torch.load(checkpoint, map_location=device, weights_only=True)
+    arch = ckpt.get('arch', 'resnet18')
+    model = build_model(num_classes, freeze_backbone=False, arch=arch).to(device)
     model.load_state_dict(ckpt['model_state'])
     model.eval()
 
@@ -65,7 +66,7 @@ def generate_all(data_dir='data', outputs_dir='outputs',
             tensor = transform(Image.open(img_path).convert('L'))
             display = tensor_to_rgb(tensor)
 
-            cam_mask = gradcam_for_sample(model, tensor, class_idx, device)
+            cam_mask = gradcam_for_sample(model, tensor, class_idx, device, arch)
             overlay  = show_cam_on_image(display, cam_mask, use_rgb=True)
 
             out_path = out_dir / f'sample_{i + 1}.png'
