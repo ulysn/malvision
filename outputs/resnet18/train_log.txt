@@ -1,0 +1,50 @@
+Device: cuda   arch: resnet18
+Splits — train: 7578  val: 1624  test: 1624
+Classes (7): ['Gatak', 'Kelihos', 'Lollipop', 'Obfuscator.ACY', 'Ramnit', 'Tracur', 'Vundo']
+
+============================================================
+  Stage1   trainable params: 3,591
+============================================================
+  epoch   1/12 | train loss 0.9096 acc 0.7763 | val loss 0.5558 acc 0.8824  <- best
+  epoch   2/12 | train loss 0.5043 acc 0.8833 | val loss 0.4609 acc 0.8824  <- best
+  epoch   3/12 | train loss 0.4140 acc 0.8996 | val loss 0.3785 acc 0.9058  <- best
+  epoch   4/12 | train loss 0.3685 acc 0.9086 | val loss 0.3578 acc 0.9113  <- best
+  epoch   5/12 | train loss 0.3442 acc 0.9136 | val loss 0.3328 acc 0.9156  <- best
+  epoch   6/12 | train loss 0.3317 acc 0.9179 | val loss 0.3242 acc 0.9156  <- best
+  epoch   7/12 | train loss 0.3152 acc 0.9206 | val loss 0.3153 acc 0.9218  <- best
+  epoch   8/12 | train loss 0.3013 acc 0.9247 | val loss 0.3164 acc 0.9132
+  epoch   9/12 | train loss 0.2990 acc 0.9261 | val loss 0.3124 acc 0.9218  <- best
+  epoch  10/12 | train loss 0.2885 acc 0.9307 | val loss 0.3076 acc 0.9218  <- best
+  epoch  11/12 | train loss 0.2802 acc 0.9311 | val loss 0.3047 acc 0.9255  <- best
+  epoch  12/12 | train loss 0.2920 acc 0.9270 | val loss 0.3024 acc 0.9230  <- best
+
+============================================================
+  Stage2   trainable params: 10,497,031
+============================================================
+  epoch   1/12 | train loss 0.1681 acc 0.9559 | val loss 0.1116 acc 0.9698  <- best
+  epoch   2/12 | train loss 0.0590 acc 0.9830 | val loss 0.0864 acc 0.9821  <- best
+  epoch   3/12 | train loss 0.0359 acc 0.9905 | val loss 0.0826 acc 0.9858  <- best
+  epoch   4/12 | train loss 0.0243 acc 0.9943 | val loss 0.1173 acc 0.9821
+  epoch   5/12 | train loss 0.0271 acc 0.9920 | val loss 0.0982 acc 0.9791
+  epoch   6/12 | train loss 0.0112 acc 0.9967 | val loss 0.0844 acc 0.9858
+  epoch   7/12 | train loss 0.0109 acc 0.9971 | val loss 0.0701 acc 0.9858  <- best
+  epoch   8/12 | train loss 0.0074 acc 0.9985 | val loss 0.0706 acc 0.9889
+  epoch   9/12 | train loss 0.0051 acc 0.9993 | val loss 0.0707 acc 0.9877
+  epoch  10/12 | train loss 0.0035 acc 0.9989 | val loss 0.0679 acc 0.9883  <- best
+  epoch  11/12 | train loss 0.0043 acc 0.9991 | val loss 0.0670 acc 0.9883  <- best
+  epoch  12/12 | train loss 0.0028 acc 0.9997 | val loss 0.0676 acc 0.9889
+
+============================================================
+  Stage3   trainable params: 11,180,103
+============================================================
+  epoch   1/8 | train loss 0.0047 acc 0.9991 | val loss 0.0745 acc 0.9865
+  epoch   2/8 | train loss 0.0032 acc 0.9993 | val loss 0.0719 acc 0.9858
+  epoch   3/8 | train loss 0.0028 acc 0.9992 | val loss 0.0667 acc 0.9877  <- best
+  epoch   4/8 | train loss 0.0022 acc 0.9999 | val loss 0.0621 acc 0.9889  <- best
+  epoch   5/8 | train loss 0.0028 acc 0.9993 | val loss 0.0643 acc 0.9877
+  epoch   6/8 | train loss 0.0028 acc 0.9992 | val loss 0.0595 acc 0.9895  <- best
+  epoch   7/8 | train loss 0.0020 acc 0.9996 | val loss 0.0624 acc 0.9883
+  epoch   8/8 | train loss 0.0023 acc 0.9995 | val loss 0.0606 acc 0.9883
+Training curves saved to outputs\resnet18\training_curves.png
+
+Training complete in 18.4 min. Best: Stage3 epoch 6 (val loss 0.0595)
